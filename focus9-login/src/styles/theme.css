@@ -1,0 +1,49 @@
+:root {
+    --primary-blue: #0d6efd;
+    --light-blue: #e7f1ff;
+    --border-color: #dee2e6;
+    --bg-white: #ffffff;
+  }
+  
+  /* Page background */
+  body {
+    background-color: #f8f9fa;
+  }
+  
+  /* Card look */
+  .erp-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  
+  /* Labels */
+  .erp-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 4px;
+  }
+  
+  /* Sticky bottom button */
+  .sticky-action {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 10px;
+    border-top: 1px solid var(--border-color);
+  }
+  
+  /* Tabs */
+  .nav-tabs .nav-link {
+    font-size: 14px;
+    color: #0d6efd;
+  }
+  
+  .nav-tabs .nav-link.active {
+    background-color: var(--light-blue);
+    font-weight: 600;
+  }
+  
