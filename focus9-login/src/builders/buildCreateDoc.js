@@ -107,9 +107,7 @@ export const buildCreateDoc = (draft) => {
     },
   };
 
-  // =========================
-  // Build HEADER (Reference Structure)
-  // =========================
+  
   const header = {
     // DOCUMENT INFO
     "DocNo": "LA/AAY/1", // Document number
@@ -200,9 +198,7 @@ export const buildCreateDoc = (draft) => {
     },
   };
 
-  // =========================
-  // Final ERP Payload
-  // =========================
+  
   return {
     data: [
       {

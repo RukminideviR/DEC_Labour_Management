@@ -21,7 +21,6 @@ function QCTab({ completedQty }) {
 
   const [error, setError] = useState("");
 
-  // Capture photos from CameraGPS
   const handleCapture = ({ photos }) => {
     setFormData((prev) => ({
       ...prev,
@@ -29,7 +28,6 @@ function QCTab({ completedQty }) {
     }));
   };
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -39,7 +37,6 @@ function QCTab({ completedQty }) {
     }));
   };
 
-  // Submit QC & generate full ERP payload
   const handleSubmit = async () => {
     setError("");
 
@@ -60,7 +57,6 @@ function QCTab({ completedQty }) {
 
     console.log("All validations passed");
 
-    // 1️⃣ Save QC into draft
     const qcData = {
       ...formData,
       completedQty,
@@ -69,11 +65,9 @@ function QCTab({ completedQty }) {
     console.log(" Saving QC data:", qcData);
     saveDraft({ qc: qcData });
 
-    // 2️⃣ Read full draft
     const draft = getDraft();
     console.log("FULL DRAFT RETRIEVED FROM STORAGE:", draft);
 
-    // 3️⃣ Build full ERP payload
     let finalPayload;
     try {
       finalPayload = buildCreateDoc(draft);
@@ -86,30 +80,35 @@ function QCTab({ completedQty }) {
       return;
     }
 
-    // 4️⃣ POST to API
     try {
-      // Get sessionId from localStorage or auth context
-      const sessionId = localStorage.getItem("sessionId") || "1901202611263751681001";
-      
-      setError(""); // Clear error
-      
-      // Call API
-      const apiResponse = await postLabourDocument(finalPayload, sessionId);
-      
-      console.log("API SUCCESS:", apiResponse);
-      
-      if (apiResponse.result === 1 || apiResponse.data) {
-        alert(" Labour timesheet submitted successfully!");
-        clearDraft(); // Clear draft after successful submission
-        navigate("/dashboard");
-      } else {
-        setError(`API Error: ${apiResponse.message || "Unknown error"}`);
-        console.error("API returned error:", apiResponse);
-      }
-    } catch (error) {
-      console.error("API Call Failed:", error);
-      setError(`Failed to submit: ${error.message}`);
-    }
+  const sessionId = localStorage.getItem("sessionId");
+
+  if (!sessionId) {
+    setError("Session expired. Please login again.");
+    navigate("/login");
+    return;
+  }
+
+  setError(""); 
+
+  
+  const apiResponse = await postLabourDocument(finalPayload, sessionId);
+
+  console.log("API SUCCESS:", apiResponse);
+
+  if (apiResponse.result === 1 || apiResponse.data) {
+    alert("Labour timesheet submitted successfully!");
+    clearDraft(); 
+    navigate("/dashboard");
+  } else {
+    setError(`API Error: ${apiResponse.message || "Unknown error"}`);
+    console.error("API returned error:", apiResponse);
+  }
+} catch (error) {
+  console.error("API Call Failed:", error);
+  setError(`Failed to submit: ${error.message}`);
+}
+
   };
 
   return (
