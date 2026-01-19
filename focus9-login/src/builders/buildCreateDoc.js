@@ -1,5 +1,5 @@
 export const buildCreateDoc = (draft) => {
-  console.log("🏗️ buildCreateDoc called with draft:", draft);
+  console.log("buildCreateDoc called with draft:", draft);
   
   const timeIn = draft.timeIn || {};
   const work = draft.workAllocation || {};
@@ -7,7 +7,7 @@ export const buildCreateDoc = (draft) => {
   const timeOut = draft.timeOut || {};
   const qc = draft.qc || {};
 
-  console.log("🔍 Extracted sections:", { timeIn, work, completion, timeOut, qc });
+  console.log("Extracted sections:", { timeIn, work, completion, timeOut, qc });
 
   // Helper: Convert date string to ERP Excel serial format (days since 1900-01-01)
   const toERPDate = (dateStr) => {
