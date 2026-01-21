@@ -1,28 +1,173 @@
-.dashboard-banner {
-  position: relative;
-  width: 100%;
-  height: 140px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.dashboard-wrapper {
+  display: flex;
+  height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* THEMES */
+.dashboard-wrapper.dark {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+.dashboard-wrapper.light {
+  background: #f4f6f8;
+  color: #1f2937;
+}
+
+/* SIDEBAR */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  transition: width 0.35s ease;
   overflow: hidden;
 }
 
-.dashboard-banner img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.dark .sidebar {
+  background: #020617;
 }
 
-.banner-text {
-  position: absolute;
-  bottom: 10px;
-  left: 15px;
-  color: #fff;
-  font-size: 1.1rem;
-  font-weight: bold;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 6px 12px;
-  border-radius: 6px;
+.light .sidebar {
+  background: #1e3a8a;
 }
-button {
-  padding: 14px;
-  font-size: 16px;
+
+.sidebar.expanded {
+  width: 320px;
+}
+
+.sidebar.collapsed {
+  width: 90px;
+}
+
+/* HEADER */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.company-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+}
+
+.company-info {
+  flex: 1;
+}
+
+.company-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.company-user {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.company-username {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* TOGGLE */
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* NAV */
+.sidebar-nav {
+  flex: 1;
+  padding: 12px;
+}
+
+.nav-item {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  text-align: left;
+  margin-bottom: 6px;
+}
+
+.nav-item.active,
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* FOOTER */
+.sidebar-footer {
+  padding: 12px;
+}
+
+.theme-btn,
+.logout-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+/* MAIN */
+.main-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* TASK CARDS */
+.task-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.task-card {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  color: black;
+}
+
+/* TASK TABS */
+.task-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.task-tab {
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.task-tab.active {
+  background: #2563eb;
+  color: white;
+}
+
+.task-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
 }

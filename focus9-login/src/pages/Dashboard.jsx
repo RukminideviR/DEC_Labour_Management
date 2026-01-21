@@ -1,27 +1,28 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../auth/AuthContext";
+import CalendarView from "../components/CalendarView";
 import api from "../api/api";
+import "./Dashboard.css";
+import logoImage from "../assets/Logo.jpg.jpeg";
 
 function Dashboard() {
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
 
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+  const [activeTab, setActiveTab] = useState("calendar");
+
   const handleLogout = async () => {
     try {
       if (user?.sessionId) {
         await api.post("/Login/Logout", {
-          data: [
-            {
-              SessionId: user.sessionId,
-            },
-          ],
+          data: [{ SessionId: user.sessionId }],
           result: 1,
           message: "",
         });
       }
-    } catch (e) {
-      console.error("Logout API failed", e);
     } finally {
       logout();
       navigate("/");
@@ -29,51 +30,100 @@ function Dashboard() {
   };
 
   return (
-    <div className="container py-3">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h6 className="mb-0">Labour Management</h6>
-        <button
-          className="btn btn-sm btn-outline-danger"
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
-      </div>
+    <div className={`dashboard-wrapper ${darkMode ? "dark" : "light"}`}>
+      {/* SIDEBAR */}
+      <aside className={`sidebar ${sidebarOpen ? "expanded" : "collapsed"}`}>
+        <div className="sidebar-header">
+          <img src={logoImage} alt="DEC Logo" className="company-logo" />
 
-      <div className="card mb-3">
-        <div className="card-body py-2">
-          <p className="mb-1">
-            <strong>User:</strong> {user?.username}
-          </p>
-          <p className="mb-1">
-            <strong>EmployeeId:</strong> {user?.employeeId}
-          </p>
-          <p className="mb-0">
-            <strong>Company Code:</strong> {user?.companyCode}
-          </p>
+          {sidebarOpen && (
+            <div className="company-info">
+              <div className="company-name">DEC Labour Workflow System</div>
+              <div className="company-user">Logged in as</div>
+              <div className="company-username">
+                {user?.username || "mobile"}
+              </div>
+            </div>
+          )}
+
+          <button
+            className="sidebar-toggle"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            ☰
+          </button>
         </div>
-      </div>
 
-      <button
-        className="btn btn-primary w-100 mb-3"
-        onClick={() => navigate("/labour/new")}
-      >
-        ➕ New Labour Entry
-      </button>
+        {/* NAVIGATION */}
+        <nav className="sidebar-nav">
+          <button
+            className={`nav-item ${activeTab === "calendar" ? "active" : ""}`}
+            onClick={() => setActiveTab("calendar")}
+          >
+            📅 {sidebarOpen && "Calendar"}
+          </button>
 
-      <button
-        className="btn btn-outline-secondary w-100 mb-3"
-        onClick={() => navigate("/labour/list")}
-      >
-        📋 Labour Entries List
-      </button>
+          <button
+            className={`nav-item ${activeTab === "tasks" ? "active" : ""}`}
+            onClick={() => {
+              setActiveTab("tasks");
+              navigate("/labour/new");
+            }}
+          >
+            🧾 {sidebarOpen && "Tasks"}
+          </button>
 
-      <button
-        className="btn btn-outline-dark w-100"
-        onClick={() => navigate("/qc")}
-      >
-        ✔ QC Tasks
-      </button>
+          <button
+            className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
+            onClick={() => setActiveTab("settings")}
+          >
+            ⚙️ {sidebarOpen && "Settings"}
+          </button>
+        </nav>
+
+        {/* FOOTER */}
+        <div className="sidebar-footer">
+          <button
+            className="theme-btn"
+            onClick={() => setDarkMode(!darkMode)}
+          >
+            {darkMode ? "🌙 Dark" : "☀️ Light"}
+          </button>
+
+          <button className="logout-btn" onClick={handleLogout}>
+            ⏻ {sidebarOpen && "Logout"}
+          </button>
+        </div>
+      </aside>
+
+      {/* MAIN CONTENT */}
+      <main className="main-content">
+        {activeTab === "calendar" && (
+          <>
+            <h2>Today’s Overview</h2>
+
+            <div className="task-cards">
+              <div
+                className="task-card"
+                onClick={() => navigate("/labour/new")}
+              >
+                ➕ New Labour Entry
+              </div>
+              <div className="task-card">📋 Work Status</div>
+              <div className="task-card">✔ QC Summary</div>
+            </div>
+
+            <CalendarView />
+          </>
+        )}
+
+        {activeTab === "settings" && (
+          <>
+            <h2>Settings</h2>
+            <p>Application preferences</p>
+          </>
+        )}
+      </main>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { getCompanies, loginUser } from "../api/focusApi";
 import "./Login.css";
 
 import decImage from "../assets/dec_image.png";
-import decLogo from "../assets/dec_logo.png";
+import decLogo from "../assets/Logo.jpg.jpeg";
 
 export default function Login() {
   const [username, setUsername] = useState("");
