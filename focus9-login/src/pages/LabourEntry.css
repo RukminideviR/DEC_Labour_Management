@@ -1,0 +1,260 @@
+/* =========================================
+   RESET & BOOTSTRAP OVERRIDES
+   ========================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+/* 🔹 LABOUR CONTAINER */
+.labour-container {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================
+   HEADER SECTION - ONE LINE
+   ========================================= */
+
+.labour-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  gap: 20px;
+  flex-wrap: nowrap;
+}
+
+/* Document Number Input */
+.doc-number {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.doc-number label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+.doc-number input {
+  width: 160px;
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #f9fafb;
+  color: #1f2937;
+  cursor: not-allowed;
+}
+
+/* Header Action Buttons */
+.header-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.header-actions button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 5px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+}
+
+.header-actions button:hover {
+  color: #0d6efd;
+  transform: scale(1.1);
+}
+
+.header-actions button:disabled {
+  color: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* =========================================
+   BODY - HORIZONTAL LAYOUT
+   ========================================= */
+
+.labour-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* =========================================
+   HORIZONTAL TABS SECTION (TOP)
+   ========================================= */
+
+.labour-tabs {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border-bottom: 2px solid #e5e7eb;
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+  background: #f9fafb;
+  align-items: stretch;
+}
+
+/* Individual Tab Button */
+.labour-tabs button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 12px 10px;
+  margin: 0;
+  border: none;
+  background: #f0f1f3;
+  border-bottom: 3px solid #d1d5db;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  text-align: center;
+  min-width: 0;
+}
+
+/* Tab Hover State */
+.labour-tabs button:hover:not(:disabled) {
+  background: #e5e7eb;
+  color: #1f2937;
+  border-bottom-color: #9ca3af;
+}
+
+/* Tab Active State - BLUE */
+.labour-tabs button.active {
+  background: #0d6efd;
+  color: #ffffff;
+  border-bottom-color: #0d6efd;
+  font-weight: 600;
+}
+
+/* Tab Disabled State - DARK/GRAY */
+.labour-tabs button:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  border-bottom-color: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* =========================================
+   CONTENT AREA
+   ========================================= */
+
+.labour-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.labour-content > * {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+@media (max-width: 1024px) {
+  .labour-tabs button {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+
+  .labour-content {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .labour-header {
+    gap: 12px;
+  }
+
+  .doc-number input {
+    width: 140px;
+    font-size: 12px;
+  }
+
+  .labour-tabs button {
+    padding: 9px 6px;
+    font-size: 11px;
+  }
+
+  .labour-content {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .labour-container {
+    padding: 8px;
+  }
+
+  .labour-header {
+    gap: 8px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+
+  .doc-number label {
+    font-size: 10px;
+  }
+
+  .doc-number input {
+    width: 120px;
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .header-actions button {
+    font-size: 16px;
+    padding: 4px;
+    min-width: 28px;
+  }
+
+  .labour-tabs button {
+    padding: 8px 4px;
+    font-size: 10px;
+  }
+
+  .labour-content {
+    padding: 8px;
+  }
+}
+

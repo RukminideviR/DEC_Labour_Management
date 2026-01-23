@@ -115,7 +115,7 @@ function QCTab({ completedQty }) {
     <div>
       {error && <div className="alert alert-danger">{error}</div>}
 
-      <CameraGPS maxPhotos={2} onCapture={handleCapture} />
+      <CameraGPS maxPhotos={1} onCapture={handleCapture} />
 
       <select
         name="qcExecutiveId"

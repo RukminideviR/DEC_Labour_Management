@@ -95,10 +95,9 @@ function CompletionTab({ onSuccess, targetQty }) {
       <div className="mb-2">
         <label>
           Work Completion Photos <span className="text-danger">*</span>
-          <small className="text-muted ms-2">(Min 1, Max 2)</small>
         </label>
 
-        <CameraGPS maxPhotos={2} onCapture={handleCapture} />
+        <CameraGPS maxPhotos={1} onCapture={handleCapture} />
       </div>
 
      

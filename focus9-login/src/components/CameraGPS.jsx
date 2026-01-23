@@ -11,20 +11,26 @@ const CameraGPS = ({ onCapture, maxPhotos = 2 }) => {
   const [error, setError] = useState("");
   const [facingMode, setFacingMode] = useState("environment"); // back camera
 
-  /* ---------------- GPS ---------------- */
+  /* ---------------- GPS (FAST) ---------------- */
   useEffect(() => {
     if (!navigator.geolocation) {
       setError("Geolocation not supported");
       return;
     }
 
+    // Fast GPS: Use cached position first, then update in background
     navigator.geolocation.getCurrentPosition(
       (pos) =>
         setGps({
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
         }),
-      () => setError("GPS permission required")
+      () => setError("GPS permission required"),
+      {
+        enableHighAccuracy: false,  // Fast mode - no survey-level accuracy needed
+        timeout: 5000,               // 5 second timeout
+        maximumAge: 300000,          // Use cache if available (5 minutes old)
+      }
     );
   }, []);
 
@@ -136,9 +142,6 @@ const CameraGPS = ({ onCapture, maxPhotos = 2 }) => {
             <div className="mb-2">
               <button className="btn btn-success me-2" onClick={capturePhoto}>
                 Capture
-              </button>
-              <button className="btn btn-warning me-2" onClick={switchCamera}>
-                Switch Camera
               </button>
               <button className="btn btn-danger" onClick={stopCamera}>
                 Cancel

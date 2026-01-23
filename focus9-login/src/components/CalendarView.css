@@ -1,3 +1,4 @@
+
 /* ============================================
    CALENDAR CONTAINER
    ============================================ */
@@ -16,12 +17,14 @@
    ============================================ */
 
 .calendar-view {
-  background: #1e40af; /* BLUE */
+  background: #0404fa; /* BLUE */
   border-radius: 14px;
   padding: 14px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+    border: 1px solid #e5e7eb;
+
 }
 
 /* Header */
@@ -162,7 +165,7 @@
    ============================================ */
 
 .tasks-list-section {
-  background: #ffffff;
+  background: #0817e7;
   border-radius: 12px;
   padding: 16px;
   border: 1px solid #e5e7eb;
@@ -177,6 +180,7 @@
 .tasks-header h3 {
   font-size: 14px;
   font-weight: 700;
+  color: white;
 }
 
 .task-count {
@@ -188,8 +192,27 @@
 }
 
 /* ============================================
-   RESPONSIVE
+   TASK STATUS
    ============================================ */
+
+.task-status {
+  background: #2563eb;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.task-status.completed {
+  background: #10b981;
+  color: white;
+}
+
+.task-status.pending {
+  background: #f59e0b;
+  color: white;
+}
 
 @media (max-width: 480px) {
   .calendar-view-container {

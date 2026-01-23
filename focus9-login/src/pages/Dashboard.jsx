@@ -64,6 +64,17 @@ function Dashboard() {
           </button>
 
           <button
+  className={`nav-item ${activeTab === "labour" ? "active" : ""}`}
+  onClick={() => {
+    setActiveTab("labour");
+    navigate("/labour/new");
+  }}
+>
+  🧑‍🏭 {sidebarOpen && "Labour Entry"}
+</button>
+
+
+          {/* <button
             className={`nav-item ${activeTab === "tasks" ? "active" : ""}`}
             onClick={() => {
               setActiveTab("tasks");
@@ -71,7 +82,7 @@ function Dashboard() {
             }}
           >
             🧾 {sidebarOpen && "Tasks"}
-          </button>
+          </button> */}
 
           <button
             className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
@@ -121,7 +132,8 @@ function Dashboard() {
       <main className="main-content">
         {activeTab === "calendar" && (
           <>
-            <h2>DEC_Calendar</h2>
+            <h2>DEC Labour Management</h2>
+
             <CalendarView />
           </>
         )}

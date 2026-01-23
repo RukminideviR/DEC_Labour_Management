@@ -64,7 +64,7 @@
   align-items: flex-start;
   padding: 16px;
   margin-top: 15px;
-  margin-bottom: 30px;
+  margin-bottom: 1px;
 }
 
 /* LOGO + COMPANY NAME */
@@ -139,7 +139,7 @@
   gap: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   margin-top: 6px;
-  margin-bottom: 10px;
+  margin-bottom: 1px;
 }
 
 .user-avatar {
