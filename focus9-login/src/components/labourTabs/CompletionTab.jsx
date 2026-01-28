@@ -3,14 +3,15 @@ import CameraGPS from "../../components/CameraGPS";
 import { saveDraft, getDraft } from "../../store/labourDraftStore";
 
 function CompletionTab({ onSuccess, targetQty }) {
+
   const [formData, setFormData] = useState({
     completedQty: "",
-    photos: [], // base64 images
+    photos: [],
     remarks: "",
     gps: null,
   });
 
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
 
   /* ---------- Load draft ---------- */
   useEffect(() => {
@@ -20,74 +21,70 @@ function CompletionTab({ onSuccess, targetQty }) {
 
   /* ---------- Camera capture ---------- */
   const handleCapture = ({ photos, gps }) => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      photos, // max 2 handled by CameraGPS
-      gps,
+      photos,
+      gps
     }));
+
+    setErrors(prev => ({ ...prev, photos: "" }));
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setErrors(prev => ({ ...prev, [name]: "" }));
   };
 
-  const removePhoto = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      photos: prev.photos.filter((_, i) => i !== index),
-    }));
+  /* ---------- Validation ---------- */
+  const validate = () => {
+    const newErrors = {};
+    const completedQty = Number(formData.completedQty);
+
+    if (!completedQty || completedQty <= 0) {
+      newErrors.completedQty = "Completed Quantity must be greater than zero";
+    } else if (completedQty > targetQty) {
+      newErrors.completedQty = `Completed Quantity cannot exceed Target Qty (${targetQty})`;
+    }
+
+    if (formData.photos.length < 1) {
+      newErrors.photos = "At least one work completion photo is required";
+    }
+
+    if (completedQty < targetQty && !formData.remarks.trim()) {
+      newErrors.remarks = "Remarks are mandatory for partial completion";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   /* ---------- Submit ---------- */
   const handleSubmit = () => {
-    const completedQty = Number(formData.completedQty);
+    if (!validate()) return;
 
-    if (!completedQty || completedQty <= 0) {
-      setError("Completed Quantity must be greater than zero");
-      return;
-    }
-
-    if (completedQty > targetQty) {
-      setError(`Completed Quantity cannot exceed Target Qty (${targetQty})`);
-      return;
-    }
-
-    if (formData.photos.length < 1) {
-      setError("At least one work completion photo is required");
-      return;
-    }
-
-    if (completedQty < targetQty && !formData.remarks.trim()) {
-      setError("Remarks are mandatory for partial completion");
-      return;
-    }
-
-    setError("");
-
-    console.log("Completion Saved:", formData);
-
-    // Save to global draft store
     saveDraft({ completion: formData });
-
     onSuccess();
   };
 
   return (
     <div>
-      {error && <div className="alert alert-danger">{error}</div>}
 
       {/* Completed Quantity */}
       <div className="mb-2">
-        <label>Completed Quantity</label>
+        <label>Completed Quantity *</label>
         <input
           type="number"
           name="completedQty"
           value={formData.completedQty}
           onChange={handleChange}
-          className="form-control"
+          className={`form-control ${errors.completedQty ? "is-invalid" : ""}`}
           max={targetQty}
         />
+        {errors.completedQty && (
+          <div className="invalid-feedback">{errors.completedQty}</div>
+        )}
         <small className="text-muted">Target Qty: {targetQty}</small>
       </div>
 
@@ -98,9 +95,12 @@ function CompletionTab({ onSuccess, targetQty }) {
         </label>
 
         <CameraGPS maxPhotos={1} onCapture={handleCapture} />
+
+        {errors.photos && (
+          <div className="text-danger small mt-1">{errors.photos}</div>
+        )}
       </div>
 
-     
       {/* Remarks */}
       <div className="mb-2">
         <label>
@@ -110,11 +110,14 @@ function CompletionTab({ onSuccess, targetQty }) {
           name="remarks"
           value={formData.remarks}
           onChange={handleChange}
-          className="form-control"
+          className={`form-control ${errors.remarks ? "is-invalid" : ""}`}
         />
+        {errors.remarks && (
+          <div className="invalid-feedback">{errors.remarks}</div>
+        )}
       </div>
 
-      <button className="btn btn-primary mt-2" onClick={handleSubmit}>
+      <button className="btn btn-primary mt-2 w-100" onClick={handleSubmit}>
         Save Work Completion
       </button>
     </div>

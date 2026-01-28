@@ -36,17 +36,17 @@ function TimeOutTab({ onSuccess }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  /* ---------- Submit ---------- */
+  /* ---------- Submit (VALIDATION SAME STYLE AS COMPLETION TAB) ---------- */
   const handleSubmit = () => {
     setError("");
 
     if (!formData.photo) {
-      setError("Photo is mandatory");
+      setError("Time Out photo is mandatory");
       return;
     }
 
     if (!formData.gps) {
-      setError("GPS not captured");
+      setError("GPS location must be captured");
       return;
     }
 
@@ -72,40 +72,47 @@ function TimeOutTab({ onSuccess }) {
 
   return (
     <div>
+      {/* Error */}
       {error && <div className="alert alert-danger">{error}</div>}
 
       {/* Out Time */}
-      <label>Out Time</label>
-      <input
-        type="text"
-        className="form-control mb-2"
-        disabled
-        value={new Date(formData.outTime).toLocaleTimeString()}
-      />
+      <div className="mb-2">
+        <label>Out Time</label>
+        <input
+          type="text"
+          className="form-control"
+          disabled
+          value={new Date(formData.outTime).toLocaleTimeString()}
+        />
+      </div>
 
       {/* Photo */}
-      <label>
-        Photo Out <span className="text-danger">*</span>
-      </label>
-      <CameraGPS maxPhotos={1} onCapture={handleCapture} />
+      <div className="mb-2">
+        <label>
+          Photo Out <span className="text-danger">*</span>
+        </label>
+        <CameraGPS maxPhotos={1} onCapture={handleCapture} />
+      </div>
 
       {/* Engineer */}
-      <label className="mt-2">
-        Site Engineer Confirmation <span className="text-danger">*</span>
-      </label>
-      <select
-        name="engineerId"
-        value={formData.engineerId}
-        onChange={handleChange}
-        className="form-control"
-      >
-        <option value="">Select Engineer</option>
-        {engineers.map((e) => (
-          <option key={e.id} value={e.id}>
-            {e.name}
-          </option>
-        ))}
-      </select>
+      <div className="mb-2">
+        <label>
+          Site Engineer Confirmation <span className="text-danger">*</span>
+        </label>
+        <select
+          name="engineerId"
+          value={formData.engineerId}
+          onChange={handleChange}
+          className="form-control"
+        >
+          <option value="">Select Engineer</option>
+          {engineers.map((e) => (
+            <option key={e.id} value={e.id}>
+              {e.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <button
         className="btn btn-primary w-100 mt-3"

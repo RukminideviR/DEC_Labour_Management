@@ -186,6 +186,50 @@
   flex-direction: column;
 }
 
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.action-btn i {
+  font-size: 16px;
+}
+
+.action-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.action-btn.danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.action-btn.danger:hover {
+  background-color: #ffecec;
+}
+.action-btn span {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+
 /* =========================================
    RESPONSIVE DESIGN
    ========================================= */

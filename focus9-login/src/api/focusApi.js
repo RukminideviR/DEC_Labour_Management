@@ -60,6 +60,48 @@ export const postLabourDocument = async (payload, sessionId) => {
   }
 };
 
+// Get next continuous Document No for Labour Entry
+export const getNextDocNo = async (sessionId) => {
+  try {
+    const SCREEN_NAME = "Labour Weekly-Monthly TimeSheet";
+    const endpoint = `/api/Focus9Api/v1/Screens/GetNextNumber?ScreenName=${encodeURIComponent(SCREEN_NAME)}&sessionId=${sessionId}`;
+    
+    const response = await axios.get(endpoint, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    
+    console.log("Next DocNo Response:", response.data);
+    return response.data.data || response.data;
+  } catch (error) {
+    console.error("Error fetching next document number:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// Load existing Labour Document by Document No
+export const loadLabourDoc = async (docNo, sessionId) => {
+  try {
+    const SCREEN_NAME = "Labour Weekly-Monthly TimeSheet";
+    const endpoint = `/api/Focus9Api/v1/Screens/LoadDoc?ScreenName=${encodeURIComponent(SCREEN_NAME)}&DocumentNo=${encodeURIComponent(docNo)}&sessionId=${sessionId}`;
+    
+    const response = await axios.get(endpoint, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    
+    console.log("LoadDoc Response:", response.data);
+    return response.data.data || response.data;
+  } catch (error) {
+    console.error("Error loading labour document:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
 // Placeholder for future implementations
 export const createDoc = async (payload, sessionId) => {
   console.log("Sending payload to Focus9 API", payload);

@@ -16,21 +16,18 @@ function TimeInTab({ onSuccess }) {
 
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split("T")[0],
-
     site: null,
     engineer: null,
     contractType: null,
     contractor: null,
     labour: null,
     skill: null,
-
-    labourAllotmentNo: "",
     photo: null,
     gps: null,
     inTime: new Date().toISOString()
   });
 
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
 
   /* ---------- Camera ---------- */
   const handleCapture = ({ photos, gps }) => {
@@ -39,26 +36,36 @@ function TimeInTab({ onSuccess }) {
       photo: photos?.[0] || null,
       gps
     }));
+
+    setErrors(prev => ({
+      ...prev,
+      photo: "",
+      gps: ""
+    }));
+  };
+
+  /* ---------- VALIDATION ---------- */
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.site) newErrors.site = "Please select Site";
+    if (!formData.engineer) newErrors.engineer = "Please select Site Engineer";
+    if (!formData.contractType) newErrors.contractType = "Please select Contract Type";
+    if (!formData.contractor) newErrors.contractor = "Please select Contractor";
+    if (!formData.labour) newErrors.labour = "Please select Labour";
+    if (!formData.skill) newErrors.skill = "Please select Skill";
+
+    if (!formData.photo) newErrors.photo = "Photo is mandatory";
+    if (!formData.gps) newErrors.gps = "GPS is mandatory";
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   };
 
   /* ---------- Submit ---------- */
   const handleSubmit = () => {
-    if (
-      !formData.site ||
-      !formData.engineer ||
-      !formData.contractType ||
-      !formData.contractor ||
-      !formData.labour ||
-      !formData.skill
-    ) {
-      setError("Please fill all mandatory fields");
-      return;
-    }
-
-    if (!formData.photo || !formData.gps) {
-      setError("Photo & GPS are mandatory");
-      return;
-    }
+    if (!validate()) return;
 
     saveDraft({ timeIn: formData });
     onSuccess();
@@ -66,7 +73,6 @@ function TimeInTab({ onSuccess }) {
 
   return (
     <div>
-      {error && <div className="alert alert-danger">{error}</div>}
 
       {/* Date */}
       <label>Date</label>
@@ -75,13 +81,11 @@ function TimeInTab({ onSuccess }) {
       {/* Site */}
       <label>Site *</label>
       <select
-        className="form-control mb-2"
-        onChange={e =>
-          setFormData(p => ({
-            ...p,
-            site: sites[e.target.value]
-          }))
-        }
+        className={`form-control mb-1 ${errors.site ? "is-invalid" : ""}`}
+        onChange={e => {
+          setFormData(p => ({ ...p, site: sites[e.target.value] }));
+          setErrors(p => ({ ...p, site: "" }));
+        }}
       >
         <option value="">Select Site</option>
         {sites.map((s, i) => (
@@ -90,17 +94,16 @@ function TimeInTab({ onSuccess }) {
           </option>
         ))}
       </select>
+      {errors.site && <div className="invalid-feedback">{errors.site}</div>}
 
       {/* Engineer */}
       <label>Site Engineer *</label>
       <select
-        className="form-control mb-2"
-        onChange={e =>
-          setFormData(p => ({
-            ...p,
-            engineer: engineers[e.target.value]
-          }))
-        }
+        className={`form-control mb-1 ${errors.engineer ? "is-invalid" : ""}`}
+        onChange={e => {
+          setFormData(p => ({ ...p, engineer: engineers[e.target.value] }));
+          setErrors(p => ({ ...p, engineer: "" }));
+        }}
       >
         <option value="">Select Engineer</option>
         {engineers.map((e, i) => (
@@ -109,17 +112,16 @@ function TimeInTab({ onSuccess }) {
           </option>
         ))}
       </select>
+      {errors.engineer && <div className="invalid-feedback">{errors.engineer}</div>}
 
       {/* Contract Type */}
       <label>Contract Type *</label>
       <select
-        className="form-control mb-2"
-        onChange={e =>
-          setFormData(p => ({
-            ...p,
-            contractType: contractTypes[e.target.value]
-          }))
-        }
+        className={`form-control mb-1 ${errors.contractType ? "is-invalid" : ""}`}
+        onChange={e => {
+          setFormData(p => ({ ...p, contractType: contractTypes[e.target.value] }));
+          setErrors(p => ({ ...p, contractType: "" }));
+        }}
       >
         <option value="">Select Contract Type</option>
         {contractTypes.map((c, i) => (
@@ -128,17 +130,16 @@ function TimeInTab({ onSuccess }) {
           </option>
         ))}
       </select>
+      {errors.contractType && <div className="invalid-feedback">{errors.contractType}</div>}
 
       {/* Contractor */}
       <label>Contractor *</label>
       <select
-        className="form-control mb-2"
-        onChange={e =>
-          setFormData(p => ({
-            ...p,
-            contractor: contractors[e.target.value]
-          }))
-        }
+        className={`form-control mb-1 ${errors.contractor ? "is-invalid" : ""}`}
+        onChange={e => {
+          setFormData(p => ({ ...p, contractor: contractors[e.target.value] }));
+          setErrors(p => ({ ...p, contractor: "" }));
+        }}
       >
         <option value="">Select Contractor</option>
         {contractors.map((c, i) => (
@@ -147,17 +148,16 @@ function TimeInTab({ onSuccess }) {
           </option>
         ))}
       </select>
+      {errors.contractor && <div className="invalid-feedback">{errors.contractor}</div>}
 
       {/* Labour */}
       <label>Labour *</label>
       <select
-        className="form-control mb-2"
-        onChange={e =>
-          setFormData(p => ({
-            ...p,
-            labour: labours[e.target.value]
-          }))
-        }
+        className={`form-control mb-1 ${errors.labour ? "is-invalid" : ""}`}
+        onChange={e => {
+          setFormData(p => ({ ...p, labour: labours[e.target.value] }));
+          setErrors(p => ({ ...p, labour: "" }));
+        }}
       >
         <option value="">Select Labour</option>
         {labours.map((l, i) => (
@@ -166,17 +166,16 @@ function TimeInTab({ onSuccess }) {
           </option>
         ))}
       </select>
+      {errors.labour && <div className="invalid-feedback">{errors.labour}</div>}
 
       {/* Skill */}
       <label>Skill *</label>
       <select
-        className="form-control mb-2"
-        onChange={e =>
-          setFormData(p => ({
-            ...p,
-            skill: skills[e.target.value]
-          }))
-        }
+        className={`form-control mb-1 ${errors.skill ? "is-invalid" : ""}`}
+        onChange={e => {
+          setFormData(p => ({ ...p, skill: skills[e.target.value] }));
+          setErrors(p => ({ ...p, skill: "" }));
+        }}
       >
         <option value="">Select Skill</option>
         {skills.map((s, i) => (
@@ -185,6 +184,7 @@ function TimeInTab({ onSuccess }) {
           </option>
         ))}
       </select>
+      {errors.skill && <div className="invalid-feedback">{errors.skill}</div>}
 
       {/* In Time */}
       <label>In Time</label>
@@ -196,6 +196,11 @@ function TimeInTab({ onSuccess }) {
 
       {/* Camera */}
       <CameraGPS maxPhotos={1} onCapture={handleCapture} />
+      {(errors.photo || errors.gps) && (
+        <div className="text-danger mt-2">
+          {errors.photo || errors.gps}
+        </div>
+      )}
 
       <button className="btn btn-primary w-100 mt-3" onClick={handleSubmit}>
         Save Time In

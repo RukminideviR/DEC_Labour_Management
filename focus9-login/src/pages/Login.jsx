@@ -39,46 +39,52 @@ export default function Login() {
     }
   };
 
-  const handleLogin = async () => {
-    if (!username || !password || !companyId) {
-      setError("Please fill all fields");
-      return;
+  const validate = () => {
+    if (!username.trim()) {
+      setError("Please enter your username");
+      return false;
     }
+    if (!password.trim()) {
+      setError("Please enter your password");
+      return false;
+    }
+    if (!companyId) {
+      setError("Please select a company");
+      return false;
+    }
+    return true;
+  };
+
+ const handleLogin = async () => {
+    if (!validate()) return;
 
     try {
       setLoading(true);
       setError("");
 
-      // Call the login API
-      const loginResponse = await loginUser(username, password, companyId);
-      
-      // Store tokens and session data
-      localStorage.setItem("token", loginResponse.Token);
-      localStorage.setItem("sessionId", loginResponse.fSessionId);
-      localStorage.setItem("employeeId", loginResponse.EmployeeId);
+      const res = await loginUser(username, password, companyId);
+
+      localStorage.setItem("token", res.Token);
+      localStorage.setItem("sessionId", res.fSessionId);
+      localStorage.setItem("employeeId", res.EmployeeId);
       localStorage.setItem("companyId", companyId);
 
-      // Prepare user data for context
-      const userData = {
+      login({
         username,
-        employeeId: loginResponse.EmployeeId,
+        employeeId: res.EmployeeId,
         companyId,
-        sessionId: loginResponse.fSessionId,
-        token: loginResponse.Token,
-      };
+        sessionId: res.fSessionId,
+        token: res.Token,
+      });
 
-      // Update auth context
-      login(userData);
-      
-      // Navigate to dashboard
       navigate("/dashboard");
-    } catch (err) {
-      console.error('Login failed:', err);
-      setError(err.response?.data?.message || "Login failed. Please check your credentials.");
+    } catch {
+      setError("Invalid username or password");
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="login-page-mobile">

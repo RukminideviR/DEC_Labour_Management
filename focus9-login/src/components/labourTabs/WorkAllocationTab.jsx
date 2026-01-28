@@ -21,17 +21,18 @@ const workCodeMaster = [
 ];
 
 function WorkAllocationTab({ onSuccess }) {
+
   const [formData, setFormData] = useState({
-    block: null,        // master
-    floor: null,        // master
+    block: null,
+    floor: null,
     grid: "",
-    workCode: null,     // master
+    workCode: null,
     targetQty: "",
     rate: 0,
     amount: 0
   });
 
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
 
   /* =========================
      HANDLE CHANGE
@@ -40,7 +41,6 @@ function WorkAllocationTab({ onSuccess }) {
     setFormData(prev => {
       let updated = { ...prev, [name]: value };
 
-      // Rate always from Work Code master
       if (name === "workCode" || name === "targetQty") {
         const wc = workCodeMaster.find(
           w => w.WorkCode === updated.workCode?.WorkCode
@@ -53,56 +53,60 @@ function WorkAllocationTab({ onSuccess }) {
 
       return updated;
     });
+
+    // Clear field error on change
+    setErrors(prev => ({ ...prev, [name]: "" }));
+  };
+
+  /* =========================
+     VALIDATION
+  ========================= */
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.block) newErrors.block = "Please select Block";
+    if (!formData.floor) newErrors.floor = "Please select Floor";
+    if (!formData.workCode) newErrors.workCode = "Please select Work Code";
+
+    if (!formData.targetQty) {
+      newErrors.targetQty = "Please enter Target Quantity";
+    } else if (Number(formData.targetQty) <= 0) {
+      newErrors.targetQty = "Target Quantity must be greater than zero";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   /* =========================
      SUBMIT
   ========================= */
   const handleSubmit = () => {
-    if (
-      !formData.block ||
-      !formData.floor ||
-      !formData.workCode ||
-      !formData.targetQty
-    ) {
-      setError("Please fill all mandatory fields");
-      return;
-    }
+    if (!validate()) return;
 
-    if (Number(formData.targetQty) <= 0) {
-      setError("Target quantity must be greater than zero");
-      return;
-    }
-
-    setError("");
-
-    console.log("WORK ALLOCATION DATA", formData);
-
-    // Save to global draft store
     saveDraft({ workAllocation: formData });
-
     onSuccess(formData);
   };
 
   return (
     <div>
-      {error && <div className="alert alert-danger">{error}</div>}
 
-      {/* 11. Block */}
+      {/* Block */}
       <label>Block *</label>
       <select
-        className="form-control mb-2"
+        className={`form-control mb-1 ${errors.block ? "is-invalid" : ""}`}
         onChange={e =>
           handleChange("block", blockMaster[e.target.value])
         }
       >
         <option value="">Select Block</option>
-        {blockMaster.map((b) => (
-          <option key={`block-${b.Block__Id}`} value={blockMaster.indexOf(b)}>
+        {blockMaster.map((b, i) => (
+          <option key={b.Block__Id} value={i}>
             {b.Block__Name}
           </option>
         ))}
       </select>
+      {errors.block && <div className="invalid-feedback">{errors.block}</div>}
 
       {/* Grid */}
       <label>Grid</label>
@@ -112,52 +116,59 @@ function WorkAllocationTab({ onSuccess }) {
         onChange={e => handleChange("grid", e.target.value)}
       />
 
-      {/* 14. Floor */}
+      {/* Floor */}
       <label>Location / Floor *</label>
       <select
-        className="form-control mb-2"
+        className={`form-control mb-1 ${errors.floor ? "is-invalid" : ""}`}
         onChange={e =>
           handleChange("floor", floorMaster[e.target.value])
         }
       >
         <option value="">Select Floor</option>
-        {floorMaster.map((f) => (
-          <option key={`floor-${f.Floor__Id}`} value={floorMaster.indexOf(f)}>
+        {floorMaster.map((f, i) => (
+          <option key={f.Floor__Id} value={i}>
             {f.Floor__Name}
           </option>
         ))}
       </select>
+      {errors.floor && <div className="invalid-feedback">{errors.floor}</div>}
 
-      {/* 17. Work Code */}
+      {/* Work Code */}
       <label>Work Code *</label>
       <select
-        className="form-control mb-2"
+        className={`form-control mb-1 ${errors.workCode ? "is-invalid" : ""}`}
         onChange={e =>
           handleChange("workCode", workCodeMaster[e.target.value])
         }
       >
         <option value="">Select Work Code</option>
-        {workCodeMaster.map((w) => (
-          <option key={`workcode-${w.WorkCode}`} value={workCodeMaster.indexOf(w)}>
+        {workCodeMaster.map((w, i) => (
+          <option key={w.WorkCode} value={i}>
             {w.WorkCode} - {w.WorkName}
           </option>
         ))}
       </select>
+      {errors.workCode && (
+        <div className="invalid-feedback">{errors.workCode}</div>
+      )}
 
-      {/* 18. Target Qty */}
+      {/* Target Qty */}
       <label>Target Quantity *</label>
       <input
         type="number"
-        className="form-control mb-2"
+        className={`form-control mb-1 ${errors.targetQty ? "is-invalid" : ""}`}
         value={formData.targetQty}
         onChange={e => handleChange("targetQty", e.target.value)}
       />
+      {errors.targetQty && (
+        <div className="invalid-feedback">{errors.targetQty}</div>
+      )}
 
-      {/* 20. Rate */}
+      {/* Rate */}
       <label>Rate (From Contract)</label>
       <input className="form-control mb-2" value={formData.rate} disabled />
 
-      {/* 21. Amount */}
+      {/* Amount */}
       <label>Amount</label>
       <input className="form-control mb-3" value={formData.amount} disabled />
 
